@@ -26,6 +26,6 @@ ADD_EXECUTABLE ( ImathTest
   testVec.cpp
   )
 
-TARGET_LINK_LIBRARIES ( ImathTest Imath Iex )
+TARGET_LINK_LIBRARIES ( ImathTest Half Imath Iex )
 
 ADD_TEST ( TestImath ImathTest )

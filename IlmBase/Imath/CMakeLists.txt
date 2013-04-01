@@ -1,6 +1,6 @@
 # yue.nicholas@gmail.com
 
-ADD_LIBRARY ( Imath STATIC
+ADD_LIBRARY ( Imath 
   ImathBox.cpp
   ImathRandom.cpp
   ImathColorAlgo.cpp
@@ -8,6 +8,12 @@ ADD_LIBRARY ( Imath STATIC
   ImathFun.cpp
   ImathVec.cpp
   ImathMatrixAlgo.cpp
+)
+
+ADD_DEFINITIONS ( -DIMATH_EXPORTS )
+
+TARGET_LINK_LIBRARIES( Imath 
+  Iex 
 )
 
 INSTALL ( TARGETS

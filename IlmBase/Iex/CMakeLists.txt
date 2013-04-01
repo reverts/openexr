@@ -1,9 +1,11 @@
 # yue.nicholas@gmail.com
 
-ADD_LIBRARY ( Iex STATIC
+ADD_LIBRARY ( Iex
   IexBaseExc.cpp
   IexThrowErrnoExc.cpp
   )
+
+ADD_DEFINITIONS ( -DIEX_EXPORTS )
 
 INSTALL ( TARGETS
   Iex
