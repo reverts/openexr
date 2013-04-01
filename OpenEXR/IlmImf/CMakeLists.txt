@@ -41,26 +41,22 @@ ADD_EXECUTABLE ( b44ExpLogTable
   b44ExpLogTable.cpp
   )
 TARGET_LINK_LIBRARIES ( b44ExpLogTable
-#  Imath
   Half
-  Iex
-  IlmThread
-  ${PTHREAD_LIB}
 )
 ADD_CUSTOM_COMMAND (
   TARGET b44ExpLogTable POST_BUILD
-  COMMAND b44ExpLogTable > ${CMAKE_SOURCE_DIR}/b44ExpLogTable.h
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/IlmImf
+  COMMAND b44ExpLogTable > ${CMAKE_CURRENT_SOURCE_DIR}/b44ExpLogTable.h
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 SET_SOURCE_FILES_PROPERTIES(
-  ${CMAKE_SOURCE_DIR}/b44ExpLogTable.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/b44ExpLogTable.h
   PROPERTIES HEADER_FILE_ONLY TRUE
   )
 SET_SOURCE_FILES_PROPERTIES (
   ImfB44Compressor.cpp
   PROPERTIES
   OBJECT_DEPENDS
-  ${CMAKE_SOURCE_DIR}/b44ExpLogTable.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/b44ExpLogTable.h
 )
 
 SET ( ILMIMF_SRCS
@@ -148,11 +144,26 @@ SET ( ILMIMF_SRCS
   ImfCompositeDeepScanLine.cpp
 )
 
-ADD_LIBRARY ( IlmImf STATIC
+ADD_LIBRARY ( IlmImf 
   ${ILMIMF_SRCS}
 )
 
-# TARGET_LINK_LIBRARIES ( IlmImf)
+ADD_DEFINITIONS( -DILMIMF_EXPORTS )
+
+SET ( ILMIMF_TARGET_LIBS Imath IlmThread Iex Half ${Z_LIB} )
+
+IF (WIN32)
+  SET (ILMIMF_TARGET_LIBS_DEBUG)
+  SET (ILMIMF_TARGET_LIBS_OPT)
+  FOREACH ( d ${ILMIMF_TARGET_LIBS} )
+    LIST ( APPEND ILMIMF_TARGET_LIBS_DEBUG ${d}_d )
+    LIST ( APPEND ILMIMF_TARGET_LIBS_OPT ${d} )
+  ENDFOREACH ()
+  TARGET_LINK_LIBRARIES ( IlmImf debug ${ILMIMF_TARGET_LIBS_DEBUG} )
+  TARGET_LINK_LIBRARIES ( IlmImf optimized ${ILMIMF_TARGET_LIBS_OPT} )
+ELSE ()
+  TARGET_LINK_LIBRARIES ( IlmImf ${ILMIMF_TARGET_LIBS} )
+ENDIF ()
 
 ADD_DEPENDENCIES ( IlmImf b44ExpLogTable )
 
@@ -164,91 +175,100 @@ INSTALL ( TARGETS
   ${CMAKE_INSTALL_PREFIX}/lib
 )
 
+SET_TARGET_PROPERTIES ( IlmImf
+  PROPERTIES
+  VERSION 10.0.0
+  SOVERSION 10
+  DEBUG_POSTFIX _d
+  )
+
 # Headers
 INSTALL ( FILES
   ${CMAKE_SOURCE_DIR}/config/OpenEXRConfig.h
-  ImfForward.h
-  ImfExport.h
-  ImfAttribute.h
-  ImfBoxAttribute.h
-  ImfCRgbaFile.h
-  ImfChannelList.h
-  ImfChannelListAttribute.h
-  ImfCompressionAttribute.h
-  ImfDoubleAttribute.h
-  ImfFloatAttribute.h
-  ImfFrameBuffer.h
-  ImfHeader.h
-  ImfIO.h
-  ImfInputFile.h
-  ImfIntAttribute.h
-  ImfLineOrderAttribute.h
-  ImfMatrixAttribute.h
-  ImfOpaqueAttribute.h
-  ImfOutputFile.h
-  ImfRgbaFile.h
-  ImfStringAttribute.h
-  ImfVecAttribute.h
-  ImfHuf.h
-  ImfWav.h
-  ImfLut.h
-  ImfArray.h
-  ImfCompression.h
-  ImfLineOrder.h
-  ImfName.h
-  ImfPixelType.h
-  ImfVersion.h
-  ImfXdr.h
-  ImfConvert.h
-  ImfPreviewImage.h
-  ImfPreviewImageAttribute.h
-  ImfChromaticities.h
-  ImfChromaticitiesAttribute.h
-  ImfKeyCode.h
-  ImfKeyCodeAttribute.h
-  ImfTimeCode.h
-  ImfTimeCodeAttribute.h
-  ImfRational.h
-  ImfRationalAttribute.h
-  ImfFramesPerSecond.h
-  ImfStandardAttributes.h
-  ImfEnvmap.h
-  ImfEnvmapAttribute.h
-  ImfInt64.h
-  ImfRgba.h
-  ImfTileDescription.h
-  ImfTileDescriptionAttribute.h
-  ImfTiledInputFile.h
-  ImfTiledOutputFile.h
-  ImfTiledRgbaFile.h
-  ImfRgbaYca.h
-  ImfTestFile.h
-  ImfThreading.h
-  ImfB44Compressor.h
-  ImfStringVectorAttribute.h
-  ImfMultiView.h
   ImfAcesFile.h
-  ImfMultiPartOutputFile.h
-  ImfGenericOutputFile.h
-  ImfMultiPartInputFile.h
-  ImfGenericInputFile.h
-  ImfPartType.h
-  ImfOutputPart.h
-  ImfTiledOutputPart.h
-  ImfInputPart.h
-  ImfTiledInputPart.h
-  ImfDeepScanLineOutputFile.h
-  ImfDeepScanLineOutputPart.h
+  ImfArray.h
+  ImfAttribute.h
+  ImfB44Compressor.h
+  ImfBoxAttribute.h
+  ImfChannelListAttribute.h
+  ImfChannelList.h
+  ImfChromaticitiesAttribute.h
+  ImfChromaticities.h
+  ImfCompositeDeepScanLine.h
+  ImfCompressionAttribute.h
+  ImfCompression.h
+  ImfConvert.h
+  ImfCRgbaFile.h
+  ImfDeepCompositing.h
+  ImfDeepFrameBuffer.h
   ImfDeepScanLineInputFile.h
   ImfDeepScanLineInputPart.h
+  ImfDeepScanLineOutputFile.h
+  ImfDeepScanLineOutputPart.h
   ImfDeepTiledInputFile.h
   ImfDeepTiledInputPart.h
   ImfDeepTiledOutputFile.h
   ImfDeepTiledOutputPart.h
-  ImfDeepFrameBuffer.h
-  ImfDeepCompositing.h
-  ImfCompositeDeepScanLine.h
+  ImfDoubleAttribute.h
+  ImfEnvmapAttribute.h
+  ImfEnvmap.h
+  ImfExport.h
+  ImfFloatAttribute.h
+  ImfForward.h
+  ImfFrameBuffer.h
+  ImfFramesPerSecond.h
+  ImfGenericInputFile.h
+  ImfGenericOutputFile.h
+  ImfHeader.h
+  ImfHuf.h
+  ImfInputFile.h
+  ImfInputPart.h
+  ImfInt64.h
+  ImfIntAttribute.h
+  ImfIO.h
+  ImfKeyCodeAttribute.h
+  ImfKeyCode.h
+  ImfLineOrderAttribute.h
+  ImfLineOrder.h
+  ImfLut.h
+  ImfMatrixAttribute.h
+  ImfMultiPartInputFile.h
+  ImfMultiPartOutputFile.h
+  ImfMultiView.h
+  ImfName.h
+  ImfNamespace.h
+  ImfOpaqueAttribute.h
+  ImfOutputFile.h
+  ImfOutputPart.h
+  ImfPartHelper.h
+  ImfPartType.h
+  ImfPixelType.h
+  ImfPreviewImageAttribute.h
+  ImfPreviewImage.h
+  ImfRationalAttribute.h
+  ImfRational.h
+  ImfRgbaFile.h
+  ImfRgba.h
+  ImfRgbaYca.h
+  ImfStandardAttributes.h
+  ImfStdIO.h
+  ImfStringAttribute.h
+  ImfStringVectorAttribute.h
+  ImfTestFile.h
+  ImfThreading.h
+  ImfTileDescriptionAttribute.h
+  ImfTileDescription.h
+  ImfTiledInputFile.h
+  ImfTiledInputPart.h
+  ImfTiledOutputFile.h
+  ImfTiledOutputPart.h
+  ImfTiledRgbaFile.h
+  ImfTimeCodeAttribute.h
+  ImfTimeCode.h
+  ImfVecAttribute.h
+  ImfVersion.h
+  ImfWav.h
+  ImfXdr.h
   DESTINATION
   ${CMAKE_INSTALL_PREFIX}/include/OpenEXR
   )
-
