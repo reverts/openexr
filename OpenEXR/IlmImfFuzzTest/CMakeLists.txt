@@ -3,6 +3,8 @@
 ADD_EXECUTABLE ( IlmImfFuzzTest
   fuzzFile.cpp
   main.cpp
+  testFuzzDeepScanLines.cpp
+  testFuzzDeepTiles.cpp
   testFuzzScanLines.cpp
   testFuzzTiles.cpp
   )
