@@ -11,7 +11,7 @@
 //  This copyright notice does not imply publication.
 //
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #  if defined(OPENEXR_DLL)
 #    define PLATFORM_EXPORT_DEFINITION __declspec(dllexport) 
 #    define PLATFORM_IMPORT_DEFINITION __declspec(dllimport)
