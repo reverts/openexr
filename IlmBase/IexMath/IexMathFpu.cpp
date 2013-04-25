@@ -41,7 +41,6 @@
 
 #include "IexMathFpu.h"
 
-#include <stdint.h>
 #include <IlmBaseConfig.h>
 #include <stdio.h>
 
